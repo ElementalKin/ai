@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.Experimental.GraphView;
 
+
 public class Djikstra : MonoBehaviour
 {
     //public GameObject FleeFrom;
@@ -17,13 +18,17 @@ public class Djikstra : MonoBehaviour
     //public float dot;
 
 
+    struct Edges
+    {
+        public int x, y;
+    };
     struct Node
     {
         public Vector3 position;
         public bool visited;
         public float gScore;
         public float fScore;
-        public Node[] edges;
+        public Edges[] edges;
         public GameObject Display;
     };
     public GameObject Terrain;
@@ -51,32 +56,35 @@ public class Djikstra : MonoBehaviour
                 path[i, x].visited = false;
             }
         }
-        for (int x = 0; x < 100; x++)
+        for (int x = 0; x < PathSize; x++)
         {
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < PathSize; i++)
             {
-                AddEdges(path,i, x );
-                if (path[i, x].visited == false)
-                { path[i, x].Display = NodeDispaly; Instantiate(path[i, x].Display, path[i, x].position, Quaternion.identity); }
+                AddEdges(path, i, x);
+                //path[i, x].Display = NodeDispaly; Instantiate(path[i, x].Display, path[i, x].position, Quaternion.identity); 
             }
         }
-        InvokeRepeating("FindPath", 0, 1.0f);
+        FindPath();
     }
     void AddEdges(Node[,] main, int x, int y)
     {
-        main[x, y].edges = new Node[4];
-        if (y + 1 >= 100) { }
-        else { main[x, y].edges[0] = main[x, y + 1];}
+        main[x, y].edges = new Edges[4]; 
+        if (y + 1 >= PathSize) { }
+        else { main[x, y].edges[0].x = x;
+               main[x, y].edges[0].x = y + 1;}
 
-        if (x + 1 >= 100) { }
-        else { main[x, y].edges[2] = main[x + 1, y];}
+        if (x + 1 >= PathSize) { }
+        else { main[x, y].edges[2].x = x + 1;
+               main[x, y].edges[2].y = y;}
 
         if (y - 1 < 0) { }
-        else { main[x, y].edges[3] = main[x, y - 1];}
+        else { main[x, y].edges[3].x = x;
+               main[x, y].edges[3].y = y- 1;}
 
         if (x - 1 < 0) { }
-        else { main[x, y].edges[1] = main[x - 1, y];}
-        
+        else { main[x, y].edges[1].x = x -1;
+               main[x, y].edges[1].y = y;}
+
     }
     
 
@@ -95,37 +103,64 @@ public class Djikstra : MonoBehaviour
                 if (Vector3.Distance(path[i, x].position, Target.transform.position) < Vector3.Distance(CurrentNode.position, Target.transform.position)) { DestinationNode = path[i, x]; }
             }
         }
-        CheckEdges(CurrentNode);
+        CheckEdges(CurrentNode, path);
     }
-    void CheckEdges(Node main)
+    void CheckEdges(Node main, Node[,] path)
     {
-        for (int i = 0; i < 4; i++)
+        if (main.Equals(CurrentNode))
         {
-            if (main.edges[i].edges != null)
+            for (int i = 0; i < 4; i++)
             {
-                if (main.edges[i].visited == false)
+                if (path[main.edges[i].x, main.edges[i].y].edges != null)
                 {
-                    main.edges[i].gScore = main.gScore + 1;
-                    main.edges[i].visited = true;
-                    Instantiate(NodeDispaly2, main.edges[i].position, Quaternion.identity);
-
-                    if (main.edges[i].Equals(DestinationNode))
+                    if (path[main.edges[i].x, main.edges[i].y].visited == false)
                     {
-                        CalculateWeight(DestinationNode);
-                        break;
+
+                        path[main.edges[i].x, main.edges[i].y].gScore = main.gScore + 1;
+                        Instantiate(NodeDispaly2, path[main.edges[i].x, main.edges[i].y].position, Quaternion.identity);
+
+                        if (main.edges[i].Equals(DestinationNode))
+                        {
+                            CalculateWeight(DestinationNode);
+                            break;
+                        }
+
+
                     }
+                }
+            }
+            main.visited = true;
+        }
+        else
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                if (path[main.edges[i].x, main.edges[i].y].edges != null)
+                {
+                    if (path[main.edges[i].x, main.edges[i].y].visited == false)
+                    {
+                        path[main.edges[i].x, main.edges[i].y].gScore = main.gScore + 1;
+                        Instantiate(NodeDispaly2, path[main.edges[i].x, main.edges[i].y].position, Quaternion.identity);
+
+                        if (main.edges[i].Equals(DestinationNode))
+                        {
+                            CalculateWeight(DestinationNode);
+                            break;
+                        }
 
 
+                    }
                 }
             }
         }
         for(int i = 0; i < 4; i++)
         {
-            if (main.edges[i].visited == false)
+            if (path[main.edges[i].x, main.edges[i].y].visited == false)
             {
-                if (main.edges[i].edges != null)
+                if (path[main.edges[i].x, main.edges[i].y].edges != null)
                 {
-                    CheckEdges(main.edges[i]);
+                    path[main.edges[i].x, main.edges[i].y].visited = true;
+                    CheckEdges(path[main.edges[i].x, main.edges[i].y], path);
 
                 }
             }
