@@ -364,6 +364,14 @@ MonoBehaviour:
   Target: {fileID: 1063906457}
   NodeDispaly: {fileID: 7888876819415675189, guid: e094ba38d6a247b44b3ace8eb8b4c44d,
     type: 3}
+  NodeDispaly2: {fileID: 4107231365619666505, guid: 092d0b377824dec4b966838ed136805f,
+    type: 3}
+  NodeDispaly3: {fileID: 6636338309093120785, guid: 67dcc8161d27a234da8a7b1a0fe0b900,
+    type: 3}
+  NodeDispaly4: {fileID: 4517104192226169793, guid: b2989e8d78bec00459a9510f7ac12ef4,
+    type: 3}
+  NodeDispaly5: {fileID: 1380733432928630405, guid: 8e72f632092a3084b8931db0fb34db9c,
+    type: 3}
 --- !u!1 &1063906457
 GameObject:
   m_ObjectHideFlags: 0
