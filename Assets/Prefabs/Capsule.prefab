@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 1726718675790065018}
   - component: {fileID: 1726718675790065019}
   - component: {fileID: 1726718675790065023}
-  - component: {fileID: 1726718675790065022}
+  - component: {fileID: 1726718675173190693}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -196,7 +196,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 1
---- !u!114 &1726718675790065022
+--- !u!114 &1726718675173190693
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -205,19 +205,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1726718675790065012}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f565bb817a2d7ee4dba73e8542c1b756, type: 3}
+  m_Script: {fileID: 11500000, guid: 62f721de81b9a074b97e34459268765a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Terrain: {fileID: 0}
-  AI: {fileID: 1726718675790065023}
-  Target: {fileID: 0}
-  NodeDispaly: {fileID: 7888876819415675189, guid: e094ba38d6a247b44b3ace8eb8b4c44d,
+  AIControl: {fileID: 4556896940607286402, guid: 9b1568b411f9efb41beadba268e7cc33,
     type: 3}
-  NodeDispaly2: {fileID: 4107231365619666505, guid: 092d0b377824dec4b966838ed136805f,
-    type: 3}
-  NodeDispaly3: {fileID: 6636338309093120785, guid: 67dcc8161d27a234da8a7b1a0fe0b900,
-    type: 3}
-  NodeDispaly4: {fileID: 4517104192226169793, guid: b2989e8d78bec00459a9510f7ac12ef4,
-    type: 3}
-  NodeDispaly5: {fileID: 1380733432928630405, guid: 8e72f632092a3084b8931db0fb34db9c,
-    type: 3}
+  CurrentVelocity: {x: 0, y: 0, z: 0}
+  MaxVelocity: 3
+  Speed: 5
+  weight: 1
+  dot: 0

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -22,16 +21,16 @@ public class Djikstra : MonoBehaviour
         public Edges[] edges;
     };
     public GameObject Terrain;
-    public Rigidbody AI;
+    public int numberOfAI = 0;
+    public GameObject StartingPosition;
+    public GameObject[] AI = new GameObject[1000];
     public GameObject Target;
     public GameObject NodeDispaly;
-    public GameObject NodeDispaly2;
-    public GameObject NodeDispaly3;
-    public GameObject NodeDispaly4;
-    public GameObject NodeDispaly5;
+    public GameObject PathDispaly;
     private Node CurrentNode;
     private Node DestinationNode;
     Node[,] path = new Node[100, 100];
+    Queue<Node> NodePath = new Queue<Node>();
     GameObject[,] pathDisplay = new GameObject[100,100];
     int PathSize = 100;
 
@@ -55,8 +54,13 @@ public class Djikstra : MonoBehaviour
                 //path[i, x].Display = NodeDispaly; Instantiate(path[i, x].Display, path[i, x].position, Quaternion.identity); 
             }
         }
+        CreateNodes();
         FindPath();
-        //CreateNodes();
+        Move();
+    }
+    void Update()
+    {
+
     }
     void AddEdges(Node[,] main, int x, int y)
     {
@@ -98,10 +102,7 @@ public class Djikstra : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
-    {
 
-    }
     void CreateNodes()
     {
         for (int x = 0; x < PathSize; x++)
@@ -116,15 +117,18 @@ public class Djikstra : MonoBehaviour
     }
     void FindPath()
     {
+
         for (int x = 0; x < PathSize; x++)
         {
             for (int i = 0; i < PathSize; i++)
             {
-                if (Vector3.Distance(path[i, x].position, AI.transform.position) < Vector3.Distance(CurrentNode.position, AI.transform.position)) { CurrentNode = path[i, x]; }
-                if (Vector3.Distance(path[i, x].position, Target.transform.position) < Vector3.Distance(DestinationNode.position, Target.transform.position)) { DestinationNode = path[i, x]; }
+                if (AI != null)
+                {
+                    if (Vector3.Distance(path[i, x].position, path[0,0].position) < Vector3.Distance(CurrentNode.position, path[0, 0].position)) { CurrentNode = path[i, x]; }
+                    if (Vector3.Distance(path[i, x].position, Target.transform.position) < Vector3.Distance(DestinationNode.position, Target.transform.position)) { DestinationNode = path[i, x]; }
+                }
             }
         }
-
         CheckEdges(CurrentNode, path);
     }
     void CheckEdges(Node main, Node[,] path)
@@ -133,7 +137,6 @@ public class Djikstra : MonoBehaviour
         Queue<Node> CalculatedMap = new Queue<Node>();
         Queue<Vector3> Done = new Queue<Vector3>();
         Node cur = main;
-
         ToDoList.Enqueue(cur);
         while (ToDoList.Count > 0)
         {
@@ -144,10 +147,11 @@ public class Djikstra : MonoBehaviour
                 {
                     if (cur.position.Equals(CurrentNode.position))
                     {
-                        CalculatedMap.Enqueue(DestinationNode);
+
+                        CalculatedMap.Enqueue(cur);
                         if (cur.position.Equals(DestinationNode.position))
                         {
-                            CalculatePath(cur, main);
+                            CalculatePath(cur, main, CalculatedMap);
                             break;
                         }
 
@@ -155,13 +159,13 @@ public class Djikstra : MonoBehaviour
                     }
                     else
                     {
-                        
+                        CalculatedMap.Enqueue(cur);
                         if (cur.position.Equals(DestinationNode.position))
                         {
-                            CalculatePath(cur, main);
+                            CalculatePath(cur, main, CalculatedMap);
                             return;
                         }
-                        CalculatedMap.Enqueue(cur);
+
                         Done.Enqueue(cur.position);
 
                     }
@@ -184,48 +188,59 @@ public class Djikstra : MonoBehaviour
             }
         }
     }
-    void CalculatePath(Node EndNode, Node Start)
+    void CalculatePath(Node EndNode, Node Start, Queue<Node> CalculatedMap)
     {
         Queue<Vector3> Done = new Queue<Vector3>();
         Queue<Node> CalculatedPath = new Queue<Node>();
         Node cur = EndNode;
-        while (cur.position != Start.position)
+        Node tmp = EndNode;
+        Instantiate(PathDispaly, tmp.position, Quaternion.identity);
+        CalculatedPath.Enqueue(tmp);
+        while (!cur.Equals(Start) && CalculatedPath.Count < 1000)
         {
-            Node tmp = new Node();
             for (int i = 0; i < 4; i++)
             {
-                
-                if (path[cur.edges[i].x, cur.edges[i].y].IsAssigned)
+                if (CalculatedMap.Contains(path[cur.edges[i].x, cur.edges[i].y]))
                 {
-                    if (path[cur.edges[i].x, cur.edges[i].y].gScore == tmp.gScore)
+                    if (path[cur.edges[i].x, cur.edges[i].y].IsAssigned)
                     {
-                        if(Vector3.Distance(path[cur.edges[i].x, cur.edges[i].y].position, Start.position) > Vector3.Distance(tmp.position, Start.position))
+                        if (path[cur.edges[i].x, cur.edges[i].y].gScore == tmp.gScore)
                         {
-                            tmp = cur.edges[i].EdgeNode;
+                            if (Vector3.Distance(path[cur.edges[i].x, cur.edges[i].y].position, Start.position) < Vector3.Distance(tmp.position, Start.position))
+                            {
+                                tmp = path[cur.edges[i].x, cur.edges[i].y];
+        }
                         }
-                    }
-                    else if (path[cur.edges[i].x, cur.edges[i].y].gScore > tmp.gScore)
-                    {
-                        tmp = path[cur.edges[i].x, cur.edges[i].y];
+                        else if (path[cur.edges[i].x, cur.edges[i].y].gScore < tmp.gScore)
+                        {
+                            tmp = path[cur.edges[i].x, cur.edges[i].y];
+                        }
                     }
                 }
             }
-            Instantiate(NodeDispaly2, tmp.position, Quaternion.identity);
+            Instantiate(PathDispaly, tmp.position, Quaternion.identity);
             CalculatedPath.Enqueue(tmp);
             cur = tmp;
         }
+        NodePath = CalculatedPath;
     }
-    void Move(Node targetNode)
+    void Move()
     {
-        //float dot = Vector3.Dot(transform.forward,(DestinationNode.position - transform.position).normalized);
-        //if (dot < .9f) { transform.Rotate(new Vector3(0, 1, 0)); }
-        //else if (dot < 0f) { transform.Rotate(new Vector3(0, -1, 0)); }
-        //if(transform.position != targetNode.position) { AI.AddForce(transform.forward, ForceMode.VelocityChange); }
-        //v = ((targetNode.position - transform.position) * MaxVelocity).normalized;
-        //force = v - CurrentVelocity;
-        //CurrentVelocity += force * Time.deltaTime;
-        //transform.position += CurrentVelocity * Time.deltaTime;
-        //Quaternion.RotateTowards(transform.rotation,new Quaternion(CurrentVelocity.x,CurrentVelocity.y,CurrentVelocity.z,0),10);
+        Node[] tmp = new Node[NodePath.Count];
+        for (int i = NodePath.Count; i > 0; i--)
+        {
+            tmp[i-1] = NodePath.Peek();
+            NodePath.Dequeue();
+        }
+        for (int i = tmp.Length; i > 0; i--)
+        {
+            NodePath.Enqueue(tmp[i-1]);
+        }
+        for(int i = 0; i < numberOfAI; i++)
+        {
+            DijkstraAIMovment a = AI[i].GetComponent<DijkstraAIMovment>();
+            a.path = NodePath;
+        }
     }
 
 }

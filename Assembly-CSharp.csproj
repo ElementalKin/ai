@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\AI.cs" />
+    <Compile Include="Assets\Scripts\DijkstraAIMovment.cs" />
     <Compile Include="Assets\Scripts\Djikstra.cs" />
     <Compile Include="Assets\Scripts\NodeDisplayScript.cs" />
     <Reference Include="Unity.Timeline.Editor">
