@@ -17,6 +17,7 @@ public class Djikstra : MonoBehaviour
         public Vector3 position;
         public int beforex, beforez;
         public bool IsAssigned;
+        public bool IsWall;
         public float gScore;
         public Edges[] edges;
     };
@@ -44,6 +45,7 @@ public class Djikstra : MonoBehaviour
                 path[i, x].position = new Vector3(-PathSize / 2 + i, 0, -PathSize / 2 + x);
                 path[i, x].gScore = 0;
                 path[i, x].IsAssigned = true;
+                path[i, x].IsWall = false;
             }
         }
         for (int x = 0; x < PathSize; x++)
@@ -60,7 +62,17 @@ public class Djikstra : MonoBehaviour
     }
     void Update()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray;
+            RaycastHit hit;
+            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit))
+            {
+                if(hit.transform.tag == "Grid") { Debug.Log("You hit the grid"); }
+            }
 
+        }
     }
     void AddEdges(Node[,] main, int x, int y)
     {
