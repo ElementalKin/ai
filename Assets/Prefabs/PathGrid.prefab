@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 2133541931736354751}
   - component: {fileID: 6658163158337026603}
   - component: {fileID: 3094194430576400427}
-  m_Layer: 0
+  - component: {fileID: 7539378650327790734}
+  m_Layer: 8
   m_Name: PathGrid
   m_TagString: GridPath
   m_Icon: {fileID: 0}
@@ -90,7 +91,7 @@ BoxCollider:
   m_GameObject: {fileID: 4107231365619666505}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -113,3 +114,15 @@ MonoBehaviour:
     IsAssigned: 0
     IsWall: 0
     gScore: 0
+--- !u!114 &7539378650327790734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4107231365619666505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09180742715796f43a7d5cb648a704fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

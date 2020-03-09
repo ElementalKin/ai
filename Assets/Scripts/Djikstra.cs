@@ -31,8 +31,8 @@ public class Djikstra : MonoBehaviour
     private Node CurrentNode;
     private Node DestinationNode;
     Node[,] path = new Node[100, 100];
-    Queue<Node> NodePath = new Queue<Node>();
-    GameObject[,] pathDisplay = new GameObject[100,100];
+    LinkedList<Node> NodePath = new LinkedList<Node>();
+    GameObject[,] pathDispaly = new GameObject[100,100];
     int PathSize = 100;
 
     // Start is called before the first frame update
@@ -121,8 +121,8 @@ public class Djikstra : MonoBehaviour
         {
             for (int i = 0; i < PathSize; i++)
             {
-                pathDisplay[i,x] = Instantiate(NodeDispaly, path[i,x].position, Quaternion.identity);
-                NodeDisplayScript a = pathDisplay[i,x].GetComponent<NodeDisplayScript>();
+                pathDispaly[i,x] = Instantiate(NodeDispaly, path[i,x].position, Quaternion.identity);
+                NodeDisplayScript a = pathDispaly[i,x].GetComponent<NodeDisplayScript>();
                 a.node = path[i, x];
             }
         }
@@ -202,12 +202,13 @@ public class Djikstra : MonoBehaviour
     }
     void CalculatePath(Node EndNode, Node Start, Queue<Node> CalculatedMap)
     {
+        LinkedList<Node> CalculatedPath = new LinkedList<Node>();
         Queue<Vector3> Done = new Queue<Vector3>();
-        Queue<Node> CalculatedPath = new Queue<Node>();
         Node cur = EndNode;
         Node tmp = EndNode;
-        Instantiate(PathDispaly, tmp.position, Quaternion.identity);
-        CalculatedPath.Enqueue(tmp);
+        Destroy(pathDispaly[(int)tmp.position.x + PathSize/2, (int)tmp.position.z + PathSize/2]);
+        Instantiate(PathDispaly,tmp.position, Quaternion.identity);
+        CalculatedPath.AddFirst(tmp);
         while (!cur.Equals(Start) && CalculatedPath.Count < 1000)
         {
             for (int i = 0; i < 4; i++)
@@ -230,8 +231,9 @@ public class Djikstra : MonoBehaviour
                     }
                 }
             }
+            Destroy(pathDispaly[(int)tmp.position.x + PathSize/2, (int)tmp.position.z + PathSize/2]);
             Instantiate(PathDispaly, tmp.position, Quaternion.identity);
-            CalculatedPath.Enqueue(tmp);
+            CalculatedPath.AddFirst(tmp);
             cur = tmp;
         }
         NodePath = CalculatedPath;
@@ -239,15 +241,6 @@ public class Djikstra : MonoBehaviour
     void Move()
     {
         Node[] tmp = new Node[NodePath.Count];
-        for (int i = NodePath.Count; i > 0; i--)
-        {
-            tmp[i-1] = NodePath.Peek();
-            NodePath.Dequeue();
-        }
-        for (int i = tmp.Length; i > 0; i--)
-        {
-            NodePath.Enqueue(tmp[i-1]);
-        }
         for(int i = 0; i < numberOfAI; i++)
         {
             DijkstraAIMovment a = AI[i].GetComponent<DijkstraAIMovment>();
