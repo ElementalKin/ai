@@ -22,18 +22,18 @@ public class Djikstra : MonoBehaviour
         public Edges[] edges;
     };
     public GameObject Terrain;
-    public int numberOfAI = 0;
+    public int numberOfAI = 1;
     public GameObject StartingPosition;
-    public GameObject[] AI = new GameObject[1000];
     public GameObject Target;
-    public GameObject NodeDispaly;
+    public GameObject NodeDispaly1;
+    public GameObject NodeDispaly2;
     public GameObject PathDispaly;
     private Node CurrentNode;
     private Node DestinationNode;
-    Node[,] path = new Node[100, 100];
+    Node[,] path = new Node[50, 50];
     LinkedList<Node> NodePath = new LinkedList<Node>();
-    GameObject[,] pathDispaly = new GameObject[100,100];
-    int PathSize = 100;
+    GameObject[,] pathDispaly = new GameObject[50,50];
+    int PathSize = 50;
 
     // Start is called before the first frame update
     void Start()
@@ -73,6 +73,7 @@ public class Djikstra : MonoBehaviour
             }
 
         }
+        Move();
     }
     void AddEdges(Node[,] main, int x, int y)
     {
@@ -117,13 +118,26 @@ public class Djikstra : MonoBehaviour
 
     void CreateNodes()
     {
+        bool Switch = true;
         for (int x = 0; x < PathSize; x++)
         {
+            Switch = !Switch;
             for (int i = 0; i < PathSize; i++)
             {
-                pathDispaly[i,x] = Instantiate(NodeDispaly, path[i,x].position, Quaternion.identity);
-                NodeDisplayScript a = pathDispaly[i,x].GetComponent<NodeDisplayScript>();
-                a.node = path[i, x];
+                if (Switch)
+                {
+                    pathDispaly[i, x] = Instantiate(NodeDispaly1, path[i, x].position, Quaternion.identity);
+                    NodeDisplayScript a = pathDispaly[i, x].GetComponent<NodeDisplayScript>();
+                    a.node = path[i, x];
+                    Switch = false;
+                }
+                else
+                {
+                    pathDispaly[i, x] = Instantiate(NodeDispaly2, path[i, x].position, Quaternion.identity);
+                    NodeDisplayScript a = pathDispaly[i, x].GetComponent<NodeDisplayScript>();
+                    a.node = path[i, x];
+                    Switch = true;
+                }
             }
         }
     }
@@ -134,11 +148,9 @@ public class Djikstra : MonoBehaviour
         {
             for (int i = 0; i < PathSize; i++)
             {
-                if (AI != null)
-                {
-                    if (Vector3.Distance(path[i, x].position, path[0,0].position) < Vector3.Distance(CurrentNode.position, path[0, 0].position)) { CurrentNode = path[i, x]; }
-                    if (Vector3.Distance(path[i, x].position, Target.transform.position) < Vector3.Distance(DestinationNode.position, Target.transform.position)) { DestinationNode = path[i, x]; }
-                }
+                if (Vector3.Distance(path[i, x].position, path[0, 0].position) < Vector3.Distance(CurrentNode.position, path[0, 0].position)) { CurrentNode = path[i, x]; }
+                if (Vector3.Distance(path[i, x].position, Target.transform.position) < Vector3.Distance(DestinationNode.position, Target.transform.position)) { DestinationNode = path[i, x]; }
+
             }
         }
         CheckEdges(CurrentNode, path);
@@ -241,11 +253,11 @@ public class Djikstra : MonoBehaviour
     void Move()
     {
         Node[] tmp = new Node[NodePath.Count];
-        for(int i = 0; i < numberOfAI; i++)
+        GameObject[] AIs = GameObject.FindGameObjectsWithTag("AI");
+        for (int i = 0; i < AIs.Length; i++)
         {
-            DijkstraAIMovment a = AI[i].GetComponent<DijkstraAIMovment>();
+            DijkstraAIMovment a = AIs[i].GetComponent<DijkstraAIMovment>();
             a.path = NodePath;
         }
     }
-
 }

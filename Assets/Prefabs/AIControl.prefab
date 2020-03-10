@@ -1048,7 +1048,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   Target: {fileID: 0}
-  NodeDispaly: {fileID: 7888876819415675189, guid: e094ba38d6a247b44b3ace8eb8b4c44d,
+  NodeDispaly1: {fileID: 1380733432928630405, guid: 8e72f632092a3084b8931db0fb34db9c,
+    type: 3}
+  NodeDispaly2: {fileID: 434259777810092725, guid: 46bffaa8a7c477443bb817494125820e,
     type: 3}
   PathDispaly: {fileID: 4107231365619666505, guid: 092d0b377824dec4b966838ed136805f,
     type: 3}
