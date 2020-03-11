@@ -22,7 +22,6 @@ public class Djikstra : MonoBehaviour
         public Edges[] edges;
     };
     public GameObject Terrain;
-    public int numberOfAI = 1;
     public GameObject StartingPosition;
     public GameObject Target;
     public GameObject NodeDispaly1;
@@ -31,7 +30,7 @@ public class Djikstra : MonoBehaviour
     private Node CurrentNode;
     private Node DestinationNode;
     Node[,] path = new Node[50, 50];
-    LinkedList<Node> NodePath = new LinkedList<Node>();
+    public LinkedList<Node> NodePath = new LinkedList<Node>();
     GameObject[,] pathDispaly = new GameObject[50,50];
     int PathSize = 50;
 
@@ -57,23 +56,6 @@ public class Djikstra : MonoBehaviour
             }
         }
         CreateNodes();
-        FindPath();
-        Move();
-    }
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Ray ray;
-            RaycastHit hit;
-            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit))
-            {
-                if(hit.transform.tag == "Grid") { Debug.Log("You hit the grid"); }
-            }
-
-        }
-        Move();
     }
     void AddEdges(Node[,] main, int x, int y)
     {
@@ -141,9 +123,9 @@ public class Djikstra : MonoBehaviour
             }
         }
     }
-    void FindPath()
+    public void FindPath()
     {
-
+        StartingPosition = GameObject.FindGameObjectWithTag("MainTower");
         for (int x = 0; x < PathSize; x++)
         {
             for (int i = 0; i < PathSize; i++)
@@ -197,12 +179,15 @@ public class Djikstra : MonoBehaviour
                     {
                         if (cur.edges[i].EdgeNode.IsAssigned)
                         {
-                            if (!Done.Contains(path[cur.edges[i].x, cur.edges[i].y].position) && !(ToDoList.Contains(path[cur.edges[i].x,cur.edges[i].y])))
+                            if (!cur.edges[i].EdgeNode.IsWall)
                             {
-                                path[cur.edges[i].x, cur.edges[i].y].beforex = (int)cur.position.x + PathSize/2;
-                                path[cur.edges[i].x, cur.edges[i].y].beforez = (int)cur.position.z + PathSize/2;
-                                path[cur.edges[i].x, cur.edges[i].y].gScore = cur.gScore + 1;
-                                ToDoList.Enqueue(path[cur.edges[i].x, cur.edges[i].y]);
+                                if (!Done.Contains(path[cur.edges[i].x, cur.edges[i].y].position) && !(ToDoList.Contains(path[cur.edges[i].x, cur.edges[i].y])))
+                                {
+                                    path[cur.edges[i].x, cur.edges[i].y].beforex = (int)cur.position.x + PathSize / 2;
+                                    path[cur.edges[i].x, cur.edges[i].y].beforez = (int)cur.position.z + PathSize / 2;
+                                    path[cur.edges[i].x, cur.edges[i].y].gScore = cur.gScore + 1;
+                                    ToDoList.Enqueue(path[cur.edges[i].x, cur.edges[i].y]);
+                                }
                             }
                         }
                     }
@@ -250,7 +235,7 @@ public class Djikstra : MonoBehaviour
         }
         NodePath = CalculatedPath;
     }
-    void Move()
+    public void Move()
     {
         Node[] tmp = new Node[NodePath.Count];
         GameObject[] AIs = GameObject.FindGameObjectsWithTag("AI");

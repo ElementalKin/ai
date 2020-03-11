@@ -66,7 +66,13 @@
     <Compile Include="Assets\Scripts\DeleteOverLapingNode.cs" />
     <Compile Include="Assets\Scripts\DijkstraAIMovment.cs" />
     <Compile Include="Assets\Scripts\Djikstra.cs" />
+    <Compile Include="Assets\Scripts\GeneralStuff.cs" />
+    <Compile Include="Assets\Scripts\MainTower.cs" />
     <Compile Include="Assets\Scripts\NodeDisplayScript.cs" />
+    <Compile Include="Assets\Scripts\SpawningAndDecisionTree.cs" />
+    <Compile Include="Assets\Scripts\Tower.cs" />
+    <Compile Include="Assets\Scripts\Turret.cs" />
+    <Compile Include="Assets\Scripts\Wall.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/s199102/Unity AI - Edward Nichols/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
