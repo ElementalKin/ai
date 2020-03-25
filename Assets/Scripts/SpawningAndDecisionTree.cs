@@ -25,35 +25,40 @@ public class SpawningAndDecisionTree : MonoBehaviour
             {
                 if (SpawnPercents.x > SpawnPercents.z)
                 {
-                    Spawn(NumberToSpawn, SpawningPoint.position, new Vector2(.33f, .67f));
+                    Spawn(NumberToSpawn, SpawningPoint.position + new Vector3(0, 1, 0), new Vector2(.33f, .67f));
                 }
                 else
                 {
-                    Spawn(NumberToSpawn, SpawningPoint.position, new Vector2(.67f, .33f));
+                    Spawn(NumberToSpawn, SpawningPoint.position + new Vector3(0, 1, 0), new Vector2(.67f, .33f));
                 }
             }
             else if (SpawnPercents.x < SpawnPercents.z && SpawnPercents.y < SpawnPercents.z)
             {
-                Spawn(NumberToSpawn, SpawningPoint.position, new Vector2(.90f, .10f));
+                Spawn(NumberToSpawn, SpawningPoint.position + new Vector3(0, 1, 0), new Vector2(.90f, .10f));
             }
             else
             {
-                Spawn(NumberToSpawn, SpawningPoint.position, new Vector2(.50f, .50f));
+                Spawn(NumberToSpawn, SpawningPoint.position + new Vector3(0,1,0), new Vector2(.50f, .50f));
             }
         }
     }
     //used to spawn the enemys.
     void Spawn(int numberSpawning,Vector3 spawnPoint,Vector2 spawnPercents)
     {
+        int x = 0;
         for (int i = 0; i < numberSpawning*spawnPercents.x;i++)
         {
-            Instantiate(Tank, spawnPoint, Quaternion.identity);
+            Instantiate(Tank, spawnPoint - new Vector3(x, 0, 0), Quaternion.identity);
+            x++;
         }
         for (int i = 0; i < numberSpawning * spawnPercents.y; i++)
         {
-            Instantiate(peasant, spawnPoint, Quaternion.identity);
-            Instantiate(peasant, spawnPoint, Quaternion.identity);
-            Instantiate(peasant, spawnPoint, Quaternion.identity);
+            Instantiate(peasant, spawnPoint - new Vector3(x, 0, 0), Quaternion.identity);
+            x++;
+            Instantiate(peasant, spawnPoint + new Vector3(x, 1, 0), Quaternion.identity);
+            x++;
+            Instantiate(peasant, spawnPoint + new Vector3(x, 2, 0), Quaternion.identity);
+            x++;
         }
     }
     //Checks how many towers there are and there type.

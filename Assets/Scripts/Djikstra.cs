@@ -15,7 +15,6 @@ public class Djikstra : MonoBehaviour
     public struct Node
     {
         public Vector3 position;
-        public int beforex, beforez;
         public bool IsAssigned;
         public bool IsWall;
         public float gScore;
@@ -125,7 +124,13 @@ public class Djikstra : MonoBehaviour
     }
     public void FindPath()
     {
-        StartingPosition = GameObject.FindGameObjectWithTag("MainTower");
+        for(int i = 0; i < PathSize; i++)
+        {
+            for (int x = 0; x < PathSize; x++)
+                path[i, x] = pathDispaly[i, x].GetComponent<NodeDisplayScript>().node;
+        }
+
+        Target = GameObject.FindGameObjectWithTag("MainTower");
         for (int x = 0; x < PathSize; x++)
         {
             for (int i = 0; i < PathSize; i++)
@@ -179,12 +184,10 @@ public class Djikstra : MonoBehaviour
                     {
                         if (cur.edges[i].EdgeNode.IsAssigned)
                         {
-                            if (!cur.edges[i].EdgeNode.IsWall)
+                            if (!path[(int)cur.edges[i].EdgeNode.position.x+25, (int)cur.edges[i].EdgeNode.position.z + 25].IsWall)
                             {
                                 if (!Done.Contains(path[cur.edges[i].x, cur.edges[i].y].position) && !(ToDoList.Contains(path[cur.edges[i].x, cur.edges[i].y])))
                                 {
-                                    path[cur.edges[i].x, cur.edges[i].y].beforex = (int)cur.position.x + PathSize / 2;
-                                    path[cur.edges[i].x, cur.edges[i].y].beforez = (int)cur.position.z + PathSize / 2;
                                     path[cur.edges[i].x, cur.edges[i].y].gScore = cur.gScore + 1;
                                     ToDoList.Enqueue(path[cur.edges[i].x, cur.edges[i].y]);
                                 }
@@ -197,6 +200,7 @@ public class Djikstra : MonoBehaviour
             }
         }
     }
+
     void CalculatePath(Node EndNode, Node Start, Queue<Node> CalculatedMap)
     {
         LinkedList<Node> CalculatedPath = new LinkedList<Node>();

@@ -202,5 +202,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 20
-  range: 150
-  attackspeed: 4
+  range: 50
+  attackspeed: 5
+  type: 0
